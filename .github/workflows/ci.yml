@@ -1,0 +1,19 @@
+name: First CI Automation
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  print-hello-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: Print Welcome Message
+        run: echo "Hello, DevOps World"
