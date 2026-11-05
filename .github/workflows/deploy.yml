@@ -1,0 +1,46 @@
+name: Vanilla Web Server Continuous Deployment
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-to-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: Deploy to Remote Server via SSH
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          timeout: 30s
+          command_timeout: 2m
+          script: |
+            set -e
+
+            echo "=== 원격 서버 작업 시작 ==="
+
+            mkdir -p "$HOME/vanilla-web"
+            cd "$HOME/vanilla-web"
+
+            whoami
+            hostname
+            pwd
+
+            date -u > deploy-check.txt
+            cat deploy-check.txt
+
+            uptime
+
+            echo "SSH 접속 및 원격 명령 실행 완료!"
